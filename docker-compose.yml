@@ -14,7 +14,9 @@ services:
       retries: 10
 
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: DockerFile
     command: sh -c "cp .my_pgpass /tmp/.my_pgpass && chmod 600 /tmp/.my_pgpass && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/dockerized-dogapi
