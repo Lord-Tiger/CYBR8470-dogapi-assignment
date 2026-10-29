@@ -1,0 +1,30 @@
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: dockerized_dogapi_db
+      POSTGRES_USER: MrDocker
+      POSTGRES_PASSWORD: dockerizeddogapipassword
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    command: sh -c "cp .my_pgpass /tmp/.my_pgpass && chmod 600 /tmp/.my_pgpass && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/dockerized-dogapi
+    ports:
+      - "8000:8000"
+    environment:
+      PGSERVICEFILE: /dockerized-dogapi/.pg_service.conf
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
