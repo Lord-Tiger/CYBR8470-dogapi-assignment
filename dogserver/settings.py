@@ -88,7 +88,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "OPTIONS": {
             "service": "dogapi_service",
-            "passfile": ".my_pgpass",
+            "passfile": "/tmp/.my_pgpass",
         },
     }
 }
